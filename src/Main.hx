@@ -91,9 +91,20 @@ class Main extends App
 			shader.iterations = Std.int(iter.value);
 		}
 		
+		var hueStep:Slider = new Slider(500, 10, s2d);
+		hueStep.x = 10;
+		hueStep.y = 30;
+		hueStep.minValue = 0;
+		hueStep.maxValue = 360;
+		hueStep.value = 0;
+		hueStep.onChange = function()
+		{
+			shader.hue = hueStep.value;
+		}
+		
 		var alp:CheckBox = new CheckBox(s2d);
 		alp.x = 5;
-		alp.y = 30;
+		alp.y = 60;
 		alp.text = "Iterations = Alpha";
 		alp.onChange = function()
 		{

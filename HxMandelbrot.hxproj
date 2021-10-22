@@ -29,8 +29,6 @@
   <!-- haxelib libraries -->
   <haxelib>
     <library name="heaps" />
-    <library name="haxeui-core" />
-    <library name="haxeui-heaps" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

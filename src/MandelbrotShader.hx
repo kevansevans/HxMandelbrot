@@ -25,6 +25,7 @@ class MandelbrotShader extends Shader
 		@param var offsetX:Float = 0;
 		@param var offsetY:Float = 0;
 		@param var alpha:Int = 0;
+		@param var hue:Float = 0;
 		
 		var c:Vec2;
 		var o:Vec2;
@@ -46,6 +47,7 @@ class MandelbrotShader extends Shader
 			
 			var z:Vec2 = c;
 			var oc:Vec2 = z;
+			var threshold = 256.0;
 			
 			var n:Int = 0;
 			
@@ -56,7 +58,7 @@ class MandelbrotShader extends Shader
 				
 				n++;
 				
-				if (sqrt((z.x * z.x) + (z.y * z.y)) > 2)
+				if (dot(z, z) > threshold * threshold)
 				{
 					break;
 				}
@@ -65,12 +67,9 @@ class MandelbrotShader extends Shader
 			if (n == iterations) {
 				pixelColor = vec4(0, 0, 0, 1);
 			} else {
-				if (alpha == 0) {
-					pixelColor = vec4(hueToRGB(n % 360), 1);
-				} else {
-					var brightness:Float = float(n) / float(iterations);
-					pixelColor = vec4(hueToRGB(n % 360), brightness);
-				}
+				var brightness:Float = alpha == 1 ? float(n) / float(iterations) : 1;
+				var sn:Float = float(n) - log2(log2(dot(z, z))) + 4.0 + hue;
+				pixelColor = vec4(hueToRGB(sn % 360, 1.0, 1.0), brightness);
 			}
 			
 			
@@ -84,17 +83,17 @@ class MandelbrotShader extends Shader
 			return vec2(x, y);
 		}
 		
-		function hueToRGB(_angle:Int):Vec3
+		function hueToRGB(_hue:Float, _value:Float, _light:Float):Vec3
 		{
 			
 			var _r:Float = 255;
 			var _g:Float = 255;
 			var _b:Float = 255;
 			
-			var v:Float = 1;
-			var s:Float = 1;
+			var v:Float = _value;
+			var s:Float = _light;
 			
-			var h:Float = float((_angle % 360)) / 60;
+			var h:Float = float((_hue % 360)) / 60;
 			if (h < 1) {
 				_r = floor(255 * v);
 				_g = floor(255 * v * (1 - s * (1 - h)));
